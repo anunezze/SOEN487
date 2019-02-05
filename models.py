@@ -3,14 +3,13 @@ from main import app
 
 db = SQLAlchemy(app)
 
-
 # def row2dict(row):
 #     return {c.name: str(getattr(row, c.name)) for c in row.__table__.columns}
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.Text(), nullable=False)
+    username = db.Column(db.Text(), nullable=False, unique=True)
     createdConvo = db.relationship("Conversation", backref="creator", lazy="dynamic", foreign_keys="Conversation.creator_id")
     participantConvo = db.relationship("Conversation", backref="participant", lazy="dynamic" ,foreign_keys="Conversation.participant_id")
     messages_sent = db.relationship("Message")

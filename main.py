@@ -26,10 +26,17 @@ def post_user():
     if not username:
         return 'Please enter an username..'
     u = User(username=username)
+    db.session.add(u)
+    try:
+        db.session.commit()
+    except sqlalchemy.exc.SQLAlchemyError as e:
+        error = "Cannot put person. "
+        print(app.config.get("DEBUG"))
+        if app.config.get("DEBUG"):
+            error += str(e)
+        return make_response(jsonify({"code": 404, "msg": error}), 404)
 
-    return jsonify({
-        "username": u.username
-    })
+    return jsonify({"code": 200, "msg": "success"})
 
 
 
