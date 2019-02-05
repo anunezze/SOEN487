@@ -1,18 +1,36 @@
 from flask import Flask, jsonify, make_response, request
-from app.config import DevConfig
+from config import DevConfig
 
 import sqlalchemy
 
 # need an app before we import models because models need it
 app = Flask(__name__)
-from app.models.models import db, row2dict
+from models import db, User
 
 app.config.from_object(DevConfig)
 
 
-# @app.errorhandler(404)
-# def page_not_found(e):
-#     return make_response(jsonify({"code": 404, "msg": "404: Not Found"}), 404)
+@app.errorhandler(404)
+def page_not_found(e):
+    return make_response(jsonify({"code": 404, "msg": "404: Not Found"}), 404)
+
+
+@app.route("/user", methods={"GET"})
+def get_users():
+    return 'get all users'
+    # return 'hello'
+
+@app.route("/user", methods={"POST"})
+def post_user():
+    username = request.headers.get("username")
+    if not username:
+        return 'Please enter an username..'
+    u = User(username=username)
+
+    return jsonify({
+        "username": u.username
+    })
+
 
 
 # @app.route('/')
