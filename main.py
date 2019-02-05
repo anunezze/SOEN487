@@ -5,7 +5,7 @@ import sqlalchemy
 
 # need an app before we import models because models need it
 app = Flask(__name__)
-from models import db, row2dict, User
+from models import db, row2dict, User, Conversation
 
 app.config.from_object(DevConfig)
 
@@ -23,7 +23,7 @@ def get_users():
 
 @app.route("/user", methods={"POST"})
 def post_user():
-    username = request.headers.get("username")
+    username = request.get_json().get('username')
     if not username:
         return 'Please enter an username..'
     u = User(username=username)
@@ -37,8 +37,30 @@ def post_user():
             error += str(e)
         return make_response(jsonify({"code": 404, "msg": error}), 404)
 
-    return jsonify({"code": 200, "msg": "success"})
+    return make_response(jsonify({"id":u.id, "username":u.username}), 201)
 
+
+@app.route("/conversation", methods={"POST"})
+def create_conversation():
+    creator_id = request.get_json().get("creator_id")
+    participant_id = request.get_json().get("participant_id")
+    if not creator_id or not participant_id:
+        return "Missing a creator or an participant"
+    c = Conversation(creator_id=creator_id,participant_id=participant_id)
+    db.session.add(c)
+    try:
+        db.session.commit()
+    except sqlalchemy.exc.SQLAlchemyError as e:
+        error = "Cannot put person. "
+        print(app.config.get("DEBUG"))
+        if app.config.get("DEBUG"):
+            error += str(e)
+        return make_response(jsonify({"code": 404, "msg": error}), 404)
+    return make_response(jsonify({
+        "id": c.id,
+        "creator_id": c.creator_id,
+        "participant_id": c.participant_id
+    }), 201)
 
 
 # @app.route('/')

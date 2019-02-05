@@ -17,14 +17,14 @@ class User(db.Model):
 
 
 class Conversation(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     participant_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     messages = db.relationship("Message", backref="messages")
 
 
 class Message(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'))
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     # creation_time = db.Column(DateTime)
