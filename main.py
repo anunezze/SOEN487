@@ -40,6 +40,12 @@ def post_user():
     return make_response(jsonify({"id":u.id, "username":u.username}), 201)
 
 
+@app.route("/conversation", methods={"GET"})
+def get_conversations():
+    conversation_list = Conversation.query.all()
+    return jsonify([row2dict(conversation) for conversation in conversation_list])
+
+
 @app.route("/conversation", methods={"POST"})
 def create_conversation():
     creator_id = request.get_json().get("creator_id")

@@ -1,0 +1,9 @@
+/user GET
+	- get all users
+/user POST (username:string)
+	- creates a username
+*********************************************************
+/conversation POST (creator_id: num, participant_id: num)
+	- creates a conversation
+/conversation GET
+	- gets all conversations
