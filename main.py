@@ -5,7 +5,7 @@ import sqlalchemy
 
 # need an app before we import models because models need it
 app = Flask(__name__)
-from models import db, User
+from models import db, row2dict, User
 
 app.config.from_object(DevConfig)
 
@@ -17,8 +17,9 @@ def page_not_found(e):
 
 @app.route("/user", methods={"GET"})
 def get_users():
-    return 'get all users'
-    # return 'hello'
+    user_list = User.query.all();
+    return jsonify([row2dict(person) for person in user_list])
+
 
 @app.route("/user", methods={"POST"})
 def post_user():
