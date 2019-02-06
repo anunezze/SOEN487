@@ -7,3 +7,8 @@
 	- creates a conversation
 /conversation GET
 	- gets all conversations
+************************************************
+/message POST (conversation_id: num, sender_id: num, text: string)
+	- creates a message
+/message/<conversation_id> GET
+	- gets all messages for a conversation

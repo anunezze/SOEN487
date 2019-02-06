@@ -46,6 +46,20 @@ def get_conversations():
     return jsonify([row2dict(conversation) for conversation in conversation_list])
 
 
+@app.route("/conversation/<conversation_id>", methods={"GET"})
+def get_messages(conversation_id):
+    c = Conversation.query.filter_by(id=conversation_id).first()
+    messages = Message.query.with_parent(c)
+    response = jsonify({
+        "id": c.id,
+        "creator_id": c.creator_id,
+        "participant_id": c.participant_id,
+        "messages": [row2dict(m) for m in messages]
+    })
+    return make_response(response, 200)
+    # return jsonify([row2dict(m) for m in messages])
+
+
 @app.route("/conversation", methods={"POST"})
 def create_conversation():
     creator_id = request.get_json().get("creator_id")
