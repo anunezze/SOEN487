@@ -7,8 +7,11 @@
 	- creates a conversation
 /conversation GET
 	- gets all conversations
+/conversation/<conversation_id> GET
+	-get a conversation with its 3 last messages
+/conversation/conversation_id>/<limit> GET
+	-get a conversation with x limit of messages
 ************************************************
 /message POST (conversation_id: num, sender_id: num, text: string)
 	- creates a message
-/message/<conversation_id> GET
-	- gets all messages for a conversation
+********************************************************

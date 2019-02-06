@@ -49,7 +49,7 @@ def get_conversations():
 @app.route("/conversation/<conversation_id>", methods={"GET"})
 def get_messages(conversation_id):
     c = Conversation.query.filter_by(id=conversation_id).first()
-    messages = Message.query.with_parent(c)
+    messages = Message.query.with_parent(c).order_by(Message.id.desc()).limit(3).all()
     response = jsonify({
         "id": c.id,
         "creator_id": c.creator_id,
@@ -57,7 +57,19 @@ def get_messages(conversation_id):
         "messages": [row2dict(m) for m in messages]
     })
     return make_response(response, 200)
-    # return jsonify([row2dict(m) for m in messages])
+
+
+@app.route("/conversation/<conversation_id>/<limit>", methods={"GET"})
+def get_messages_with_limit(conversation_id, limit):
+    c = Conversation.query.filter_by(id=conversation_id).first()
+    messages = Message.query.with_parent(c).order_by(Message.id.desc()).limit(limit).all()
+    response = jsonify({
+        "id": c.id,
+        "creator_id": c.creator_id,
+        "participant_id": c.participant_id,
+        "messages": [row2dict(m) for m in messages]
+    })
+    return make_response(response, 200)
 
 
 @app.route("/conversation", methods={"POST"})
@@ -106,41 +118,6 @@ def post_message():
         "sender_id": m.sender_id,
         "text": m.text
     }), 201)
-
-
-# @app.route("/person/<person_id>")
-# def get_person(person_id):
-#     # id is a primary key, so we'll have max 1 result row
-#     person = Person.query.filter_by(id=person_id).first()
-#     if person:
-#         return jsonify(row2dict(person))
-#     else:
-#         return make_response(jsonify({"code": 404, "msg": "Cannot find this person id."}), 404)
-
-
-# @app.route("/person", methods={"PUT"})
-# def put_person():
-#     # get the name first, if no name then fail
-#     name = request.form.get("name")
-#     if not name:
-#         return make_response(jsonify({"code": 403,
-#                                       "msg": "Cannot put person. Missing mandatory fields."}), 403)
-#     person_id = request.form.get("id")
-#     if not person_id:
-#         p = Person(name=name)
-#     else:
-#         p = Person(id=person_id, name=name)
-#
-#     db.session.add(p)
-#     try:
-#         db.session.commit()
-#     except sqlalchemy.exc.SQLAlchemyError as e:
-#         error = "Cannot put person. "
-#         print(app.config.get("DEBUG"))
-#         if app.config.get("DEBUG"):
-#             error += str(e)
-#         return make_response(jsonify({"code": 404, "msg": error}), 404)
-#     return jsonify({"code": 200, "msg": "success"})
 
 
 if __name__ == '__main__':
