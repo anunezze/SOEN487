@@ -1,7 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from main import app
+from datetime import datetime
 
 db = SQLAlchemy(app)
+
 
 def row2dict(row):
     return {c.name: str(getattr(row, c.name)) for c in row.__table__.columns}
@@ -28,5 +30,5 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'))
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # creation_time = db.Column(DateTime)
+    creation_time = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)
     text = db.Column(db.Text(), nullable=False)

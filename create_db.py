@@ -1,11 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = r"sqlite:///soen487a1.sqlite"
 db = SQLAlchemy(app)
 
 ## Copy Models from models.py
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.Text(), nullable=False, unique=True)
@@ -27,5 +30,5 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'))
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # creation_time = db.Column(DateTime)
+    creation_time = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)
     text = db.Column(db.Text(), nullable=False)

@@ -5,7 +5,7 @@ import sqlalchemy
 
 # need an app before we import models because models need it
 app = Flask(__name__)
-from models import db, row2dict, User, Conversation
+from models import db, row2dict, User, Conversation, Message
 
 app.config.from_object(DevConfig)
 
@@ -69,16 +69,29 @@ def create_conversation():
     }), 201)
 
 
-# @app.route('/')
-# def soen487_a1():
-#     return jsonify({"title": "SOEN487 Assignment 1",
-#                     "student": {"id": "Your id#", "name": "Your name"}})
-
-
-# @app.route("/person")
-# def get_all_person():
-#     person_list = Person.query.all()
-#     return jsonify([row2dict(person) for person in person_list])
+@app.route("/message", methods={"POST"})
+def post_message():
+    conversation_id = request.get_json().get("conversation_id")
+    sender_id = request.get_json().get("sender_id")
+    text = request.get_json().get("text")
+    if not conversation_id or not sender_id or not text:
+        return "Missing body arguments"
+    m = Message(conversation_id=conversation_id, sender_id=sender_id, text=text)
+    db.session.add(m)
+    try:
+        db.session.commit()
+    except sqlalchemy.exc.SQLAlchemyError as e:
+        error = "Cannot put person. "
+        print(app.config.get("DEBUG"))
+        if app.config.get("DEBUG"):
+            error += str(e)
+        return make_response(jsonify({"code": 404, "msg": error}), 404)
+    return make_response(jsonify({
+        "id": m.id,
+        "conversation_id": m.conversation_id,
+        "sender_id": m.sender_id,
+        "text": m.text
+    }), 201)
 
 
 # @app.route("/person/<person_id>")
