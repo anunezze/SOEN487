@@ -120,5 +120,20 @@ def post_message():
     }), 201)
 
 
+@app.route("/message/<message_id>", methods={"DELETE"})
+def delete_message(message_id):
+    m = Message.query.filter_by(id=message_id).first()
+    db.session.delete(m)
+    try:
+        db.session.commit()
+    except sqlalchemy.exc.SQLAlchemyError as e:
+        error = "Cannot put person. "
+        print(app.config.get("DEBUG"))
+        if app.config.get("DEBUG"):
+            error += str(e)
+        return make_response(jsonify({"code": 404, "msg": error}), 404)
+    return make_response("Message was deleted", 202)
+
+
 if __name__ == '__main__':
     app.run()

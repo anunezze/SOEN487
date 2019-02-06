@@ -14,4 +14,6 @@
 ************************************************
 /message POST (conversation_id: num, sender_id: num, text: string)
 	- creates a message
+/message/<message_id> DELETE
+	- deletes a message
 ********************************************************
