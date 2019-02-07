@@ -66,5 +66,6 @@ class TestConversation(unittest.TestCase):
         self.assertEqual(conversation['messages'][0]['sender_id'], "1")
         self.assertEqual(conversation['messages'][0]['text'], "test2")
 
+
 if __name__ == '__main__':
     unittest.main()
