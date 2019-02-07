@@ -1,9 +1,9 @@
 import unittest
 import json
-from server.main import app as tested_app
-from server.main import db as tested_db
-from server.config import TestConfig
-from server.models.models import Person
+from main import app as tested_app
+from main import db as tested_db
+from config import TestConfig
+from models import Person
 
 tested_app.config.from_object(TestConfig)
 

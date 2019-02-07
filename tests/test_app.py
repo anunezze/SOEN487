@@ -1,7 +1,7 @@
 import unittest
 import json
-from server.main import app as tested_app
-from server.config import TestConfig
+from main import app as tested_app
+from config import TestConfig
 
 tested_app.config.from_object(TestConfig)
 
