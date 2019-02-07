@@ -29,8 +29,8 @@ class TestUser(unittest.TestCase):
 
         user_list = json.loads(str(response.data, "utf8"))
         self.assertEqual(type(user_list), list)
-        self.assertDictEqual(user_list[0], {"id": "1", "name": "andres"})
-        self.assertDictEqual(user_list[1], {"id": "2", "name": "marcos"})
+        self.assertDictEqual(user_list[0], {"id": "1", "username": "andres"})
+        self.assertDictEqual(user_list[1], {"id": "2", "username": "marcos"})
 
 
 if __name__ == '__main__':
