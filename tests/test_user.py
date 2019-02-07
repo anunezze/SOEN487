@@ -32,6 +32,15 @@ class TestUser(unittest.TestCase):
         self.assertDictEqual(user_list[0], {"id": "1", "username": "andres"})
         self.assertDictEqual(user_list[1], {"id": "2", "username": "marcos"})
 
+    def test_post_user(self):
+        initial_count = User.query.filter_by(username="andy").count()
+
+        response = self.app.post("/user",json={"username":"andy"})
+        self.assertEqual(response.status_code, 201)
+
+        updated_count = User.query.filter_by(username="andy").count()
+        self.assertEqual(updated_count, initial_count + 1)
+
 
 if __name__ == '__main__':
     unittest.main()
