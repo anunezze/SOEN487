@@ -49,20 +49,19 @@ def get_conversations():
 @app.route("/conversation/<conversation_id>", methods={"GET"})
 def get_messages(conversation_id):
     c = Conversation.query.filter_by(id=conversation_id).first()
-    messages = Message.query.with_parent(c).order_by(Message.id.desc()).limit(3).all()
     response = jsonify({
         "id": c.id,
         "creator_id": c.creator_id,
         "participant_id": c.participant_id,
-        "messages": [row2dict(m) for m in messages]
+        "messages": []
     })
     return make_response(response, 200)
 
 
-@app.route("/conversation/<conversation_id>/<limit>", methods={"GET"})
-def get_messages_with_limit(conversation_id, limit):
+@app.route("/conversation/<conversation_id>/<message_limit>", methods={"GET"})
+def get_messages_with_limit(conversation_id, message_limit):
     c = Conversation.query.filter_by(id=conversation_id).first()
-    messages = Message.query.with_parent(c).order_by(Message.id.desc()).limit(limit).all()
+    messages = Message.query.with_parent(c).order_by(Message.id.desc()).limit(message_limit).all()
     response = jsonify({
         "id": c.id,
         "creator_id": c.creator_id,
